@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux Simulation</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #24283b; /* Background color */
+      color: #a9b1d6; /* Text color */
+      margin: 0;
+      padding: 20px;
+    }
+    #terminal {
+      background-color: #24283b; /* Terminal background color */
+      border-radius: 5px;
+      padding: 10px;
+      overflow-y: scroll;
+      height: 70vh;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+    }
+    #input-container {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    #prompt {
+      color: #ff9e64; /* Prompt color */
+      font-family: monospace;
+    }
+    #commandInput {
+      background-color: transparent;
+      border: none;
+      color: #ff9e64; /* Input text color */
+      padding: 0;
+      margin: 0;
+      width: calc(100% - 40px);
+      font-size: 16px;
+      font-family: monospace; /* Match the font of the prompt */
+      outline: none;
+    }
+    #commandInput:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <div>Welcome to Browser Linux Simulation!</div>
+    <div>Type 'help' to see available commands.</div>
+  </div>
+  <div id="input-container">
+    <div id="prompt">neo@Browser_linux:~$</div>
+    <input type="text" id="commandInput" autofocus onkeydown="handleInput(event)">
+  </div>
+  <script>
+    function handleInput(event) {
+      if (event.key === "Enter") {
+        const input = document.getElementById("commandInput").value.trim();
+        const terminal = document.getElementById("terminal");
+        const prompt = document.getElementById("prompt");
+
+        switch (input) {
+          case "help":
+            terminal.innerHTML += "<div>Available commands: pwd, pfetch, curl, sudo rm -rf, clear, help</div>";
+            break;
+          case "pwd":
+            terminal.innerHTML += "<div>/home/neo</div>";
+            break;
+          case "pfetch":
+            terminal.innerHTML += `
+              <div>___       neo@Browser_linux</div>
+              <div>(.. |      os     Browser Linux 1.0</div>
+              <div>(<> |      host   x86_64</div>
+              <div>/ __  \\     kernel 5.0.0</div>
+              <div>( /  \\ /|    uptime 10m</div>
+              <div>_/\\ __)/_)    memory 512M / 1G</div>
+              <div>\\/-____\\/</div>`;
+            break;
+          case "curl":
+            terminal.innerHTML += "<div>Usage: curl [URL]</div>";
+            break;
+          case "clear":
+            terminal.innerHTML = ""; // Clear terminal content
+            break;
+          case "sudo rm -rf":
+            terminal.innerHTML = "<div>Congratulations, you just deleted all your files! You should celebrate!</div>";
+            break;
+          default:
+            if (input.startsWith("curl ")) {
+              const url = input.substring(5);
+              fetch(url)
+                .then(response => response.text())
+                .then(data => terminal.innerHTML += `<div>${data}</div>`)
+                .catch(error => terminal.innerHTML += `<div>Error: ${error}</div>`);
+            } else {
+              terminal.innerHTML += "<div>Command not found. Type 'help' for available commands.</div>";
+            }
+            break;
+        }
+
+        document.getElementById("commandInput").value = "";
+        terminal.scrollTop = terminal.scrollHeight; // Scroll to bottom
+        event.preventDefault();
+      }
+    }
+  </script>
+</body>
+</html>
